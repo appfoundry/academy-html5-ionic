@@ -1,0 +1,24 @@
+<ion-view view-title="Write Something">
+  <ion-content>
+    <div class="list card">
+      <img ng-src="{{currentItem.image}}" style="width:100%"/>
+      <div class="list">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Title</span>
+          <input type="text" placeholder="A beautiful title" ng-model="currentItem.title">
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Description</span>
+          <input type="text" placeholder="Say something about your picture" ng-model="currentItem.description">
+        </label>
+      </div>
+    </div>
+
+
+  </ion-content>
+  <ion-footer-bar class="bar-assertive" style="justify-content: flex-end;">
+    <button class="button"  ng-click="annotation.submit()">
+      Save
+    </button>
+  </ion-footer-bar>
+</ion-view>
