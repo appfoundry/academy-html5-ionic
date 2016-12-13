@@ -1,5 +1,5 @@
 # course-ionic
-This repository is part of a presentation, which can be booked at appfoundry.
+This repository is part of a presentation, which can be found in our Speaker Deck at https://speakerdeck.com/appfoundrybe/the-ionic-crash-course
 
 # Setting up your development env. 
 
