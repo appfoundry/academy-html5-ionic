@@ -38,12 +38,64 @@
     <ion-pane>
       <ion-header-bar class="bar-stable">
         <h1 class="title">Notify It</h1>
+        <!-- New notification button -->
+        <button class="button button-icon" ng-click="openNotificationModal()">
+          <i class="icon ion-compose"></i>
+        </button>
       </ion-header-bar>
+      
       <ion-content>
+        <!-- Notification list -->
+        <div class="list card" ng-repeat="notifcation in notifications track by $index">
+          <div class="item item-divider">
+            <span ng-bind="notifcation.title"></span>
+          </div>
+          <div class="item item-body">
+            <strong>Title: <span ng-bind="notifcation.title"></span></strong>
+            <p>
+              <span ng-bind="notifcation.content"></span>
+            </p>
+          </div>
+          <div class="item tabs tabs-secondary tabs-icon-left">
+            <!-- Remove Notification Button -->
+            <a class="tab-item assertive" ng-click="removeNotification($index)">
+              <i class="icon ion-android-close"></i>
+            </a>
+          </div>
+        </div>
       </ion-content>
     </ion-pane>
+    <!-- New Notification Modal -->
     <script id="new-notification-modal.html" type="text/ng-template">
-        test
+      <ion-modal-view>
+        <ion-header-bar class="bar-dark">
+          <h1 class="title">Create a new Notification</h1>
+            <button class="button button-icon" ng-click="closeNotificationModal()">
+              <i class="icon ion-android-close"></i>
+            </button>
+        </ion-header-bar>
+        <ion-content>
+          <form ng-submit="createNotification()">
+            <div class="list list-inset">
+              <label class="item item-input">
+                <input ng-model="notification.title" type="text" placeholder="Notification title">
+              </label>
+              <label class="item item-input">
+                <textarea ng-model="notification.content" rows="5" placeholder="Notification content"></textarea>
+              </label>
+              <label class="item item-divider">
+                How many seconds from now?
+              </label>
+              <label class="item range">
+                1
+                <input type="range" min="1" max="15" step="1" ng-model="notification.timing" />
+                15
+              </label>
+              <button type="submit" class="button button-block button-positive">Create Notification</button>
+            </div>
+          </form>
+        </ion-content>
+      </ion-modal-view>
     </script>
   </body>
 </html>
