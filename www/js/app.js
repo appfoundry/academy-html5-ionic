@@ -26,6 +26,8 @@ angular.module('af-notifier', ['ionic','LocalStorageModule','ngCordova'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+   
+
   });
 })
 .constant("NOTIFICATION",{
@@ -39,10 +41,13 @@ angular.module('af-notifier', ['ionic','LocalStorageModule','ngCordova'])
 })
 .controller('main', [
   '$scope', 
+  '$rootScope',
   '$ionicModal', 
   'localStorageService',
+  '$cordovaLocalNotification',
+  '$ionicPlatform',
   'NOTIFICATION',
-  function($scope, $ionicModal, localStorageService, NOTIFICATION){
+  function($scope,$rootScope, $ionicModal, localStorageService,$cordovaLocalNotification, $ionicPlatform, NOTIFICATION){
     var _self = this;    
 
     //initialise the notifiers scope with an empty array
@@ -83,6 +88,8 @@ angular.module('af-notifier', ['ionic','LocalStorageModule','ngCordova'])
       $scope.notification.id = Date.now();
       $scope.notifications.push($scope.notification);
 
+      $scope.scheduleDelayedNotification($scope.notification);
+
       localStorageService.set(NOTIFICATION.KEY, $scope.notifications);
       $scope.notification = angular.extend({}, NOTIFICATION.SCHEMA);
 
@@ -90,10 +97,44 @@ angular.module('af-notifier', ['ionic','LocalStorageModule','ngCordova'])
       $scope.closeNotificationModal();
     }
 
-    $scope.removeNotification = function(index) {
+    $scope.removeNotification = function(index, id) {
       // removes a notification
       $scope.notifications.splice(index, 1);
       localStorageService.set(_self.notificationsKey, $scope.notifications);
+
+      $scope.cancelSingleNotification(id);
+
     }
 
+    $ionicPlatform.ready(function() {
+      $scope.scheduleDelayedNotification = function (notification) {
+        var now = new Date().getTime();
+
+        var mapped = angular.extend({}, {
+          at: new Date(now + notification.timing * 1000),
+          text: notification.content,
+        }, notification);
+
+        delete mapped.timing;
+        delete mapped.content;
+
+        $cordovaLocalNotification.schedule(mapped);
+      };
+
+      $scope.cancelSingleNotification = function (id) {
+        $cordovaLocalNotification.cancel(id)
+      };
+    });
+  
+    $rootScope.$on('$cordovaLocalNotification:trigger',
+      function (event, notification, state) {
+        
+        var notifications = $scope.notifications.filter( function(item) {
+          return notification.id !== item.id;
+        });
+
+        $scope.notifications = notifications;
+        localStorageService.set(_self.notificationsKey, $scope.notifications);
+        
+      });
 }]);

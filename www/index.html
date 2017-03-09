@@ -38,7 +38,7 @@
 
     <ion-pane>
       <ion-header-bar class="bar-stable">
-        <h1 class="title">Notify It</h1>
+        <h1 class="title">Notify me</h1>
         <!-- New notification button -->
         <button class="button button-icon" ng-click="openNotificationModal()">
           <i class="icon ion-compose"></i>
@@ -57,12 +57,12 @@
               <span ng-bind="notifcation.content"></span>
             </p>
             <p>
-              In <span style="bold" ng-bind="notifcation.timing"></span> seconds
+              In <span ng-bind="notifcation.timing"></span> seconds
             </p>
           </div>
           <div class="item tabs tabs-secondary tabs-icon-left">
             <!-- Remove Notification Button -->
-            <a class="tab-item assertive" ng-click="removeNotification($index)">
+            <a class="tab-item assertive" ng-click="removeNotification($index, notifcation.id)">
               <i class="icon ion-android-close"></i>
             </a>
           </div>
