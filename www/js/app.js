@@ -28,3 +28,42 @@ angular.module('af-notifier', ['ionic','LocalStorageModule'])
     }
   });
 })
+
+.controller('main', [
+  '$scope', 
+  '$ionicModal', 
+  'localStorageService', 
+  function($scope, $ionicModal, localStorageService){
+
+  //initialise the notifiers scope with an empty array
+  $scope.notifications = [];
+
+  //initialise the task scope with an empty object
+  $scope.notification = {}
+
+  $ionicModal.fromTemplateUrl('new-notification-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then( function(modal){
+    $scope.newNotification = modal;
+  });
+
+  $scope.openNotificationModal = function () {
+    $scope.newNotification.show();
+  };
+
+  $scope.closeNotificationModal = function () {
+    $scope.newNotification.hide();
+  };
+
+  $scope.getNotifications = function() {
+    // fetches all notifications from local Storage
+  }
+  $scope.createNotification = function() {
+    // creates a new notification
+  }
+
+  $scope.removeNotification = function() {
+    // removes a notification
+  }
+}]);
