@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-angular.module('af-notifier', ['ionic','LocalStorageModule'])
+angular.module('af-notifier', ['ionic','LocalStorageModule','ngCordova'])
 
 .config( function(localStorageServiceProvider){
   localStorageServiceProvider
