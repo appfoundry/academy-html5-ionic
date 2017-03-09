@@ -28,42 +28,72 @@ angular.module('af-notifier', ['ionic','LocalStorageModule'])
     }
   });
 })
-
+.constant("NOTIFICATION",{
+    SCHEMA: {
+      id: Date.now(),
+      timing: 1,
+      title: "",
+      content: ""
+    },
+    KEY: "notification"
+})
 .controller('main', [
   '$scope', 
   '$ionicModal', 
-  'localStorageService', 
-  function($scope, $ionicModal, localStorageService){
+  'localStorageService',
+  'NOTIFICATION',
+  function($scope, $ionicModal, localStorageService, NOTIFICATION){
+    var _self = this;    
 
-  //initialise the notifiers scope with an empty array
-  $scope.notifications = [];
+    //initialise the notifiers scope with an empty array
+    $scope.notifications = [];
 
-  //initialise the task scope with an empty object
-  $scope.notification = {}
+    //initialise the task scope with an empty object / copy not equal ;)
+    $scope.notification = angular.extend({}, NOTIFICATION.SCHEMA);
 
-  $ionicModal.fromTemplateUrl('new-notification-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then( function(modal){
-    $scope.newNotification = modal;
-  });
+    $ionicModal.fromTemplateUrl('new-notification-modal.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then( function(modal){
+      $scope.newNotification = modal;
+    });
 
-  $scope.openNotificationModal = function () {
-    $scope.newNotification.show();
-  };
 
-  $scope.closeNotificationModal = function () {
-    $scope.newNotification.hide();
-  };
+    $scope.openNotificationModal = function () {
+      $scope.newNotification.show();
+    };
 
-  $scope.getNotifications = function() {
-    // fetches all notifications from local Storage
-  }
-  $scope.createNotification = function() {
-    // creates a new notification
-  }
+    $scope.closeNotificationModal = function () {
+      $scope.newNotification.hide();
+    };
 
-  $scope.removeNotification = function() {
-    // removes a notification
-  }
+    $scope.getNotifications = function() {
+      // fetches all notifications from local Storage
+      if (localStorageService.get(NOTIFICATION.KEY)) {
+        $scope.notifications = localStorageService.get(NOTIFICATION.KEY);
+      } else {
+        $scope.notifications = [];
+      }
+    }
+
+    $scope.createNotification = function() {
+      // creates a new notification
+
+      // ID needs altering before saving
+      $scope.notification.id = Date.now();
+      $scope.notifications.push($scope.notification);
+
+      localStorageService.set(NOTIFICATION.KEY, $scope.notifications);
+      $scope.notification = angular.extend({}, NOTIFICATION.SCHEMA);
+
+      //close new task modal
+      $scope.closeNotificationModal();
+    }
+
+    $scope.removeNotification = function(index) {
+      // removes a notification
+      $scope.notifications.splice(index, 1);
+      localStorageService.set(_self.notificationsKey, $scope.notifications);
+    }
+
 }]);
